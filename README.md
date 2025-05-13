@@ -215,6 +215,8 @@ namespace SmartShop.Models
 ### Order.cs / OrderItem.cs
 Siparişler ve bu siparişlerdeki ürünlerin bilgilerini içerir.
 ![Image](https://github.com/user-attachments/assets/218f34a0-29a9-420d-86f2-a7b1905a0278)
+![Image](https://github.com/user-attachments/assets/58494b8b-3756-42a3-88a3-0f2a1e7d5b96)
+![Image](https://github.com/user-attachments/assets/c4aa093f-fcc3-49be-ae6f-b45c9e707d67)
 
 
 ```
