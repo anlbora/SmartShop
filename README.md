@@ -132,8 +132,6 @@ public class Category
 
 ### Customer.cs
 Müşteri bilgilerini içerir. Zorunlu alanlar: `Name`, `Address`, `Phone`.
-![Image](https://github.com/user-attachments/assets/bfd86d3e-7dc3-4dc3-ae6b-37f0ade1d3ef)
-![Image](https://github.com/user-attachments/assets/c01722c5-485f-445a-9d85-4914d804bf0a)
 ![Image](https://github.com/user-attachments/assets/10bc75fb-cd72-4e27-adc5-0ef18a237343)
 ![Image](https://github.com/user-attachments/assets/2c8b78a1-789c-4ce0-b888-5edc3d273c2c)
 ![Image](https://github.com/user-attachments/assets/161eca38-0b53-4f8d-af30-d2f8e0bd25b0)
