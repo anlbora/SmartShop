@@ -2,6 +2,9 @@
 
 SmartShop, ASP.NET Core MVC teknolojisiyle geliştirilmiş basit ama işlevsel bir ürün, sipariş ve müşteri yönetim sistemidir. Uygulama; CRUD işlemleri, filtreleme, raporlama ve PDF çıktısı gibi temel e-ticaret yönetimi ihtiyaçlarını karşılamaktadır.
 
+![Image](https://github.com/user-attachments/assets/0c4ea683-c56f-48a4-887c-54c86b8ba318)
+![Image](https://github.com/user-attachments/assets/fa61e039-cb29-4830-9087-5889850f9c49)
+
 ## 🚀 Özellikler
 
 - Kategori, ürün, müşteri ve sipariş CRUD işlemleri
@@ -11,11 +14,15 @@ SmartShop, ASP.NET Core MVC teknolojisiyle geliştirilmiş basit ama işlevsel b
 - Razor View ve Layout yapısı
 - MVC mimarisine uygun modüler yapı
 
+![Image](https://github.com/user-attachments/assets/3d35eb54-d719-4829-9853-43a69131c948)
+![Image](https://github.com/user-attachments/assets/e95f9571-6da1-462d-8bb2-bfaaff6522bf)
+![Image](https://github.com/user-attachments/assets/a526865c-34a9-4d13-b4d8-42b8f464d404)
+![Image](https://github.com/user-attachments/assets/c51b97ee-dba8-4245-b6c8-b234ab912f0c)
+![Image](https://github.com/user-attachments/assets/aa6a603c-b761-43f8-bcad-aaba9fdfb367)
+
 ---
 
 ## 🧱 Proje Yapısı
-
-
 
 ```
 SmartShop/
@@ -107,6 +114,8 @@ SmartShop/
 
 ### Category.cs
 Kategori bilgilerini tutar. Her kategoriye birden fazla ürün bağlı olabilir.
+![Image](https://github.com/user-attachments/assets/d6e2e1df-37c7-4184-be38-6394524ee0a2)
+![Image](https://github.com/user-attachments/assets/f1acf4f2-3159-418e-b0bc-63492bd34efc)
 
 ```
 public class Category
@@ -123,7 +132,11 @@ public class Category
 
 ### Customer.cs
 Müşteri bilgilerini içerir. Zorunlu alanlar: `Name`, `Address`, `Phone`.
-
+![Image](https://github.com/user-attachments/assets/bfd86d3e-7dc3-4dc3-ae6b-37f0ade1d3ef)
+![Image](https://github.com/user-attachments/assets/c01722c5-485f-445a-9d85-4914d804bf0a)
+![Image](https://github.com/user-attachments/assets/10bc75fb-cd72-4e27-adc5-0ef18a237343)
+![Image](https://github.com/user-attachments/assets/2c8b78a1-789c-4ce0-b888-5edc3d273c2c)
+![Image](https://github.com/user-attachments/assets/161eca38-0b53-4f8d-af30-d2f8e0bd25b0)
 ```
 using System.ComponentModel.DataAnnotations;
 
@@ -152,6 +165,10 @@ namespace SmartShop.Models
 
 ### Product.cs
 Ürün bilgileri, stok, fiyat ve kategori ilişkisi.
+![Image](https://github.com/user-attachments/assets/9f180bbb-a1ab-42a7-a73e-6dccf3e6ce50)
+![Image](https://github.com/user-attachments/assets/4ed54fd9-8033-4bb1-beb6-84ee649d9773)
+![Image](https://github.com/user-attachments/assets/9e4ccea8-0af0-44bb-a2a0-12a857089ba7)
+![Image](https://github.com/user-attachments/assets/0f338280-0b93-4ae8-92b9-b98b872a4f61)
 
 ```
 using System;
@@ -199,6 +216,9 @@ namespace SmartShop.Models
 
 ### Order.cs / OrderItem.cs
 Siparişler ve bu siparişlerdeki ürünlerin bilgilerini içerir.
+![Image](https://github.com/user-attachments/assets/d6e2e1df-37c7-4184-be38-6394524ee0a2)
+![Image](https://github.com/user-attachments/assets/f1acf4f2-3159-418e-b0bc-63492bd34efc)
+![Image](https://github.com/user-attachments/assets/218f34a0-29a9-420d-86f2-a7b1905a0278)
 
 ```
 using System.ComponentModel.DataAnnotations;
