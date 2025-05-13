@@ -13,7 +13,7 @@ SmartShop, temel ürün, kategori, müşteri ve sipariş yönetimini sağlayan b
 
 ## 📁 Proje Yapısı
 
-'''
+```
 SmartShop/
 │
 ├── Models/
@@ -32,4 +32,4 @@ SmartShop/
 ├── Program.cs
 ├── libwkhtmltox.dll
 
-'''
+```
