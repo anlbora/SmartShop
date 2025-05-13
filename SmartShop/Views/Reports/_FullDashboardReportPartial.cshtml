@@ -1,0 +1,222 @@
+﻿@using System.Globalization
+@model SmartShop.ViewModels.DashboardViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        table.card-table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+            border: none;
+        }
+
+        table.card-table td {
+            border: none !important;
+            padding: 16px;
+        }
+
+
+        .card {
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .blue {
+            background-color: #d1ecf1;
+        }
+
+        .green {
+            background-color: #d4edda;
+        }
+
+        .yellow {
+            background-color: #fff3cd;
+        }
+
+        .red {
+            background-color: #f8d7da;
+        }
+
+        h3 {
+            margin-top: 40px;
+            font-size: 20px;
+            color: #34495e;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .chart-img {
+            width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Genel Rapor</h2>
+
+    <table class="card-table">
+        <tr>
+            <td class="card blue">Toplam Ürün<br />@Model.TotalProducts</td>
+            <td></td>
+            <td class="card green">Toplam Sipariş<br />@Model.TotalOrders</td>
+            <td></td>
+            <td class="card yellow">Bugünkü Sipariş<br />@Model.TodayOrders</td>
+            <td></td>
+            <td class="card red">Düşük Stoklu Ürünler<br />@Model.LowStockProducts</td>
+        </tr>
+    </table>
+
+
+@*     <h3>Grafikler</h3>
+    <img src="data:image/png;base64,@Model.OrderChartBase64" style="width:600px; height:auto;" />
+    <img src="data:image/png;base64,@Model.StockChartBase64" style="width:600px; height:auto;" />
+    <img src="data:image/png;base64,@Model.StatusChartBase64" style="width:600px; height:auto;" />
+    <img src="data:image/png;base64,@Model.RevenueChartBase64" style="width:600px; height:auto;" /> *@
+
+
+
+    <h3>Ürün Listesi</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>Stok</th>
+                <th>Fiyat</th>
+                <th>İndirimli Fiyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.Products)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Stock</td>
+                    <td>@p.Price.ToString("C")</td>
+                    <td>@(p.IsDiscounted && p.DiscountPrice.HasValue ? p.DiscountPrice.Value.ToString("C") : "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Müşteri Listesi</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>E-posta</th>
+                <th>Telefon</th>
+                <th>Adres</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model.Customers)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td>@c.Email</td>
+                    <td>@c.Phone</td>
+                    <td>@c.Address</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Son Siparişler</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Müşteri</th>
+                <th>Tarih</th>
+                <th>Durum</th>
+                <th>Tutar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model.RecentOrders)
+            {
+                <tr>
+                    <td>@o.Customer?.Name</td>
+                    <td>@o.OrderDate.ToShortDateString()</td>
+                    <td>@o.Status.ToString()</td>
+                    <td>
+                        @o.Items.Sum(i => i.Quantity *
+                                 (i.Product.IsDiscounted && i.Product.DiscountPrice.HasValue
+                                 ? i.Product.DiscountPrice.Value
+                                 : i.Product.Price)
+                                 ).ToString("C")
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align:right; font-weight:bold;">Genel Toplam:</td>
+                <td>
+                    @{
+                        decimal grandTotal = 0;
+                        foreach (var o in Model.RecentOrders)
+                        {
+                            if (o.Items != null)
+                            {
+                                foreach (var item in o.Items)
+                                {
+                                    if (item.Product != null)
+                                    {
+                                        decimal unitPrice = (item.Product.IsDiscounted && item.Product.DiscountPrice.HasValue)
+                                        ? item.Product.DiscountPrice.Value
+                                        : item.Product.Price;
+
+                                        grandTotal += item.Quantity * unitPrice;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    @grandTotal.ToString("C", new CultureInfo("tr-TR"))
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</body>
+</html>

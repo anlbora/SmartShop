@@ -1,0 +1,46 @@
+﻿@model List<SmartShop.Models.Order>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Müşteri</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Tutar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            var total = order.Items?.Sum(i => i.Quantity *
+            (i.Product.IsDiscounted && i.Product.DiscountPrice.HasValue
+            ? i.Product.DiscountPrice.Value
+            : i.Product.Price)) ?? 0;
+
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.Customer?.Name</td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@order.Status.ToString()</td>
+                <td>@total.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" class="text-end fw-bold">Genel Toplam:</td>
+            <td>
+                @{
+                    var grandTotal = Model.Sum(order =>
+                    order.Items?.Sum(i => i.Quantity *
+                    (i.Product.IsDiscounted && i.Product.DiscountPrice.HasValue
+                    ? i.Product.DiscountPrice.Value
+                    : i.Product.Price)) ?? 0
+                    );
+                }
+                @grandTotal.ToString("C")
+            </td>
+        </tr>
+    </tfoot>
+</table>

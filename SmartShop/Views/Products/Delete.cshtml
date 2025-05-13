@@ -1,0 +1,63 @@
+﻿@model SmartShop.Models.Product
+
+@{
+    ViewData["Title"] = "Ürün Sil";
+}
+
+<h2 class="text-danger mb-4">Ürün Sil</h2>
+
+<div class="alert alert-warning">
+    <strong>Dikkat!</strong> Bu ürün kaydını silmek üzeresiniz. Devam etmek istiyor musunuz?
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="row">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <div class="col-md-4 mb-3">
+                    <img src="@Model.ImagePath" alt="@Model.Name" class="img-fluid rounded border" />
+                </div>
+            }
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-4">Ürün Adı</dt>
+                    <dd class="col-sm-8">@Model.Name</dd>
+
+                    <dt class="col-sm-4">Kategori</dt>
+                    <dd class="col-sm-8">@Model.Category?.Name</dd>
+
+                    <dt class="col-sm-4">Stok</dt>
+                    <dd class="col-sm-8">@Model.Stock</dd>
+
+                    <dt class="col-sm-4">Fiyat</dt>
+                    <dd class="col-sm-8">@Model.Price.ToString("C")</dd>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Description))
+                    {
+                        <dt class="col-sm-4">Açıklama</dt>
+                        <dd class="col-sm-8">@Model.Description</dd>
+                    }
+
+                    <dt class="col-sm-4">İndirimli mi?</dt>
+                    <dd class="col-sm-8">@((Model.IsDiscounted) ? "Evet" : "Hayır")</dd>
+
+                    @if (Model.IsDiscounted && Model.DiscountPrice.HasValue)
+                    {
+                        <dt class="col-sm-4">İndirimli Fiyat</dt>
+                        <dd class="col-sm-8">@Model.DiscountPrice.Value.ToString("C")</dd>
+                    }
+
+                    <dt class="col-sm-4">Eklenme Tarihi</dt>
+                    <dd class="col-sm-8">@Model.CreatedAt.ToShortDateString()</dd>
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post" class="mt-4">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger me-2">Evet, Sil</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </form>
+    </div>
+</div>

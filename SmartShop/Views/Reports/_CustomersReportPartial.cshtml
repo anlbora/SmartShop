@@ -1,0 +1,53 @@
+﻿@model List<SmartShop.Models.Customer>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Müşteri Raporu</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>E-posta</th>
+                <th>Telefon</th>
+                <th>Adres</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.Name</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.Phone</td>
+                    <td>@customer.Address</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

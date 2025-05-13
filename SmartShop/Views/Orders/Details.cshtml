@@ -1,0 +1,72 @@
+﻿@model SmartShop.Models.Order
+
+@{
+    ViewData["Title"] = "Sipariş Detayları";
+}
+
+<h2 class="mb-4">Sipariş Detayları - #@Model.Id</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Müşteri:</strong> @Model.Customer?.Name</p>
+        @if (!string.IsNullOrEmpty(Model.Customer?.Email))
+        {
+            <p><strong>E-posta:</strong> @Model.Customer.Email</p>
+        }
+        <p><strong>Adres:</strong> @Model.Customer?.Address</p>
+
+        <p><strong>Tarih:</strong> @Model.OrderDate.ToShortDateString()</p>
+        <p>
+            <strong>Durum:</strong>
+            @switch (Model.Status)
+            {
+                case SmartShop.Models.OrderStatus.Received:
+                    <span class="badge bg-secondary">Sipariş Alındı</span>
+                    break;
+                case SmartShop.Models.OrderStatus.Preparing:
+                    <span class="badge bg-warning text-dark">Hazırlanıyor</span>
+                    break;
+                case SmartShop.Models.OrderStatus.Shipped:
+                    <span class="badge bg-info text-dark">Kargoda</span>
+                    break;
+                case SmartShop.Models.OrderStatus.Delivered:
+                    <span class="badge bg-success">Teslim Edildi</span>
+                    break;
+            }
+        </p>
+    </div>
+</div>
+
+<h5>Ürünler</h5>
+
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Ürün</th>
+            <th>Adet</th>
+            <th>Birim Fiyat</th>
+            <th>Toplam</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            var price = item.Product.IsDiscounted && item.Product.DiscountPrice.HasValue
+            ? item.Product.DiscountPrice.Value
+            : item.Product.Price;
+
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@price.ToString("C")</td>
+                <td>@((item.Quantity * price).ToString("C"))</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p class="text-end fw-bold fs-5">
+    Toplam Tutar: @Model.TotalAmount.ToString("C")
+</p>
+
+<a asp-action="Index" class="btn btn-secondary">Geri Dön</a>

@@ -1,0 +1,61 @@
+﻿@model List<SmartShop.Models.Product>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        img {
+            max-width: 80px;
+            max-height: 80px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <h2>Ürün Raporu</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Ad</th>
+                <th>Açıklama</th>
+                <th>Stok</th>
+                <th>Fiyat</th>
+                <th>İndirimli Fiyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Description</td>
+                    <td>@p.Stock</td>
+                    <td>@p.Price.ToString("C")</td>
+                    <td>@(p.IsDiscounted && p.DiscountPrice.HasValue ? p.DiscountPrice.Value.ToString("C") : "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

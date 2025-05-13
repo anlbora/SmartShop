@@ -1,0 +1,49 @@
+﻿@model List<SmartShop.Models.CategoryProductCountViewModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Kategori Raporu</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Kategori Adı</th>
+                <th>Ürün Sayısı</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.CategoryName</td>
+                    <td>@c.ProductCount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,36 @@
+﻿@model SmartShop.Models.Customer
+
+@{
+    ViewData["Title"] = "Müşteri Sil";
+}
+
+<h2 class="text-danger mb-4">Müşteri Sil</h2>
+
+<div class="alert alert-warning">
+    <strong>Dikkat!</strong> Bu müşteri kaydını silmek üzeresiniz. Devam etmek istiyor musunuz?
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Ad Soyad</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            <dt class="col-sm-3">E-posta</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Telefon</dt>
+            <dd class="col-sm-9">@Model.Phone</dd>
+
+            <dt class="col-sm-3">Adres</dt>
+            <dd class="col-sm-9">@Model.Address</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="mt-4">
+            <input type="hidden" asp-for="Id" />
+
+            <button type="submit" class="btn btn-danger me-2">Evet, Sil</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </form>
+    </div>
+</div>

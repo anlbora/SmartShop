@@ -1,0 +1,561 @@
+﻿@model SmartShop.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row justify-content-between align-items-center mb-4">
+    <div class="col-md-6">
+        <h2 class="mb-0">Yönetim Paneli</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="/Reports/FullDashboardReport" class="btn btn-outline-primary">Genel Rapor</a>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-2">
+        <div class="card text-bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Kategori</h5>
+                <p class="card-text display-6">@Model.TotalCategories</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Ürün</h5>
+                <p class="card-text display-6">@Model.TotalProducts</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Sipariş</h5>
+                <p class="card-text display-6">@Model.TotalOrders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Bugünkü Sipariş</h5>
+                <p class="card-text display-6">@Model.TodayOrders</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Düşük Stoklu Ürünler</h5>
+                <p class="card-text display-6">@Model.LowStockProducts</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row align-items-center mt-5 mb-3">
+    <div class="col-md-6">
+        <h4 class="mb-0">Kategoriler</h4>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="/Reports/CategoryReport" class="btn btn-outline-danger">Kategori Raporu</a>
+    </div>
+</div>
+
+<div class="row align-items-center mb-3">
+    <div class="col-md-12">
+        <input type="text" class="form-control" id="categorySearch" placeholder="Kategori ara..." />
+    </div>
+</div>
+
+<div class="row" id="categoryList">
+    @foreach (var item in Model.CategoryProductCounts)
+    {
+        <div class="col-md-3 mb-4 category-item">
+            <div class="card shadow-sm h-100 border-1">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">@item.CategoryName</h6>
+                    <h4 class="card-title text-dark">@item.ProductCount</h4>
+                    <p class="card-text small">Ürün kayıtlı</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row align-items-center mt-5 mb-3">
+    <div class="col-md-6">
+        <h4 class="mb-0">Ürünler</h4>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="/Reports/ProductReport" class="btn btn-outline-danger">Ürünler Raporu</a>
+    </div>
+</div>
+<input type="text" class="form-control mb-3" id="productSearch" placeholder="Ürün ara..." />
+<div class="row" id="productList">
+    @foreach (var product in Model.Products)
+    {
+        <div class="col-md-3 mb-4 product-item">
+            <div class="card h-100">
+                <img src="@product.ImagePath" class="card-img-top" alt="@product.Name" style="height: 250px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">Stok: @product.Stock</p>
+                    <p class="card-text">@product.Description</p>
+                    @if (product.IsDiscounted && product.DiscountPrice.HasValue)
+                    {
+                        <p>
+                            <span class="text-muted text-decoration-line-through">@product.Price.ToString("C")</span>
+                            <br />
+                            <span class="text-danger">İndirimli: @product.DiscountPrice.Value.ToString("C")</span>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>@product.Price.ToString("C")</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row align-items-center mt-5 mb-3">
+    <div class="col-md-6">
+        <h4 class="mb-0">Müşteriler</h4>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="/Reports/CustomerReport" class="btn btn-outline-danger">Müşteri Raporu</a>
+    </div>
+</div>
+<input type="text" class="form-control mb-3" id="customerSearch" placeholder="Müşteri ara..." />
+<table class="table table-bordered" id="customerTable">
+    <thead class="table-light">
+        <tr>
+            <th>Ad</th>
+            <th>E-posta</th>
+            <th>Telefon</th>
+            <th>Adres</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>@customer.Name</td>
+                <td>@customer.Email</td>
+                <td>@customer.Phone</td>
+                <td>@customer.Address</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="row align-items-center mt-5 mb-3"></div>
+
+
+<form method="get" id="filterForm" class="row g-2 align-items-end mb-4">
+    <div class="col-md-3">
+        <label for="startDate" class="form-label">Başlangıç Tarihi</label>
+        <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-md-3">
+        <label for="endDate" class="form-label">Bitiş Tarihi</label>
+        <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-md-3">
+        <label for="status" class="form-label">Sipariş Durumu</label>
+        <select class="form-select" id="status" name="status">
+            <option value="">Tümü</option>
+            @foreach (var s in Enum.GetValues(typeof(OrderStatus)))
+            {
+                <option value="@s" selected="@(Model.SelectedStatus == s.ToString())">@s</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="customerId" class="form-label">Müşteri</label>
+        <select class="form-select" id="customerId" name="customerId">
+            <option value="">Tümü</option>
+            @foreach (var customer in Model.Customers.DistinctBy(c => c.Id))
+            {
+                <option value="@customer.Id" selected="@(Model.SelectedCustomerId == customer.Id)">@customer.Name</option>
+            }
+        </select>
+    </div>
+</form>
+<div id="orderTableWrapper">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Müşteri</th>
+                <th>Tarih</th>
+                <th>Durum</th>
+                <th>Tutar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.RecentOrders)
+            {
+                <tr>
+                    <td>@order.Customer?.Name</td>
+                    <td>@order.OrderDate.ToShortDateString()</td>
+                    <td>@order.Status.ToString()</td>
+                    <td>@order.TotalAmount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Aylık Grafikler -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Sipariş Grafiği</h5>
+                <div style="height: 300px;">
+                    <canvas id="ordersChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Stok Dağılımı</h5>
+                <div style="height: 300px;">
+                    <canvas id="stockChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Sipariş Durumları</h5>
+                <div style="height: 300px;">
+                    <canvas id="orderStatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Aylık Ortalama Sipariş Tutarı</h5>
+                <div style="height: 300px;">
+                    <canvas id="avgOrderAmountChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Aylık Ciro</h5>
+                <div style="height: 300px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Kategori Bazlı Ürün Sayısı</h5>
+                <div style="height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Günlük Grafikler -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Günlük Ciro</h5>
+                <div style="height: 300px;">
+                    <canvas id="dailyRevenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Günlük Ortalama Sipariş Tutarı</h5>
+                <div style="height: 300px;">
+                    <canvas id="dailyAverageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctxOrders = document.getElementById('ordersChart');
+        new Chart(ctxOrders, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.ChartLabels)),
+                datasets: [{
+                    label: 'Aylık Siparişler',
+                    data: @Html.Raw(Json.Serialize(Model.ChartData)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+
+        const ctxStock = document.getElementById('stockChart');
+        new Chart(ctxStock, {
+            type: 'pie',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.StockChartLabels)),
+                datasets: [{
+                    label: 'Stok Dağılımı',
+                    data: @Html.Raw(Json.Serialize(Model.StockChartData)),
+                    backgroundColor: [
+                        '#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#20c997', '#fd7e14', '#17a2b8'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const ctxStatus = document.getElementById('orderStatusChart');
+        new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.OrderStatusLabels)),
+                datasets: [{
+                    label: 'Sipariş Durumları',
+                    data: @Html.Raw(Json.Serialize(Model.OrderStatusData)),
+                    backgroundColor: [
+                        '#6c757d', '#ffc107', '#0dcaf0', '#198754'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const ctxAvg = document.getElementById('avgOrderAmountChart');
+        new Chart(ctxAvg, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.AverageOrderLabels)),
+                datasets: [{
+                    label: 'Ortalama Sipariş Tutarı',
+                    data: @Html.Raw(Json.Serialize(Model.AverageOrderAmounts)),
+                    fill: false,
+                    borderColor: '#17a2b8',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const ctxRevenue = document.getElementById('revenueChart');
+        new Chart(ctxRevenue, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.AverageOrderLabels)),
+                datasets: [{
+                    label: 'Aylık Ciro',
+                    data: @Html.Raw(Json.Serialize(Model.TotalRevenueAmounts)),
+                    backgroundColor: 'rgba(40, 167, 69, 0.6)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        const searchInput = document.getElementById('productSearch');
+        const productItems = document.querySelectorAll('.product-item');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            productItems.forEach(item => {
+                const name = item.querySelector('.card-title').innerText.toLowerCase();
+                item.style.display = name.includes(query) ? '' : 'none';
+            });
+        });
+
+        const customerSearchInput = document.getElementById('customerSearch');
+        const customerRows = document.querySelectorAll('#customerTable tbody tr');
+
+        customerSearchInput.addEventListener('input', () => {
+            const query = customerSearchInput.value.toLowerCase();
+            customerRows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                row.style.display = name.includes(query) ? '' : 'none';
+            });
+        });
+
+             const filterInputs = ["startDate", "endDate", "status", "customerId"];
+        const filterForm = document.getElementById("filterForm");
+
+        filterInputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener("change", () => {
+                    const query = new URLSearchParams(new FormData(filterForm)).toString();
+
+                    fetch(`/Dashboard/FilterOrders?${query}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById("orderTableWrapper").innerHTML = html;
+                        });
+                });
+            }
+        });
+
+            const categorySearchInput = document.getElementById('categorySearch');
+        const categoryItems = document.querySelectorAll('.category-item');
+
+        categorySearchInput.addEventListener('input', () => {
+            const query = categorySearchInput.value.toLowerCase();
+            categoryItems.forEach(item => {
+                const name = item.querySelector('.card-subtitle').innerText.toLowerCase();
+                item.style.display = name.includes(query) ? '' : 'none';
+            });
+        });
+        const ctxCategory = document.getElementById('categoryChart');
+        new Chart(ctxCategory, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.CategoryChartLabels)),
+                datasets: [{
+                    label: 'Ürün Sayısı',
+                    data: @Html.Raw(Json.Serialize(Model.CategoryChartData)),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+                const ctxDailyRevenue = document.getElementById('dailyRevenueChart');
+        new Chart(ctxDailyRevenue, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.DailyRevenueLabels)),
+                datasets: [{
+                    label: 'Ciro (₺)',
+                    data: @Html.Raw(Json.Serialize(Model.DailyRevenueData)),
+                    backgroundColor: 'rgba(0, 123, 255, 0.6)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const ctxDailyAvg = document.getElementById('dailyAverageChart');
+        new Chart(ctxDailyAvg, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.DailyAverageOrderLabels)),
+                datasets: [{
+                    label: 'Ortalama Tutar (₺)',
+                    data: @Html.Raw(Json.Serialize(Model.DailyAverageOrderData)),
+                    fill: false,
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+
+
+    </script>
+}

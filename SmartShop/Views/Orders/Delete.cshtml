@@ -1,0 +1,88 @@
+﻿@model SmartShop.Models.Order
+
+@{
+    ViewData["Title"] = "Siparişi Sil";
+}
+
+<h2 class="text-danger mb-4">Siparişi Sil</h2>
+
+<div class="alert alert-warning">
+    <strong>Dikkat!</strong> Bu sipariş kaydını silmek üzeresiniz. Devam etmek istiyor musunuz?
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Müşteri</dt>
+            <dd class="col-sm-9">@Model.Customer?.Name</dd>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Customer?.Email))
+            {
+                <dt class="col-sm-3">E-posta</dt>
+                <dd class="col-sm-9">@Model.Customer.Email</dd>
+            }
+
+
+            <dt class="col-sm-3">Adres</dt>
+            <dd class="col-sm-9">@Model.Customer?.Address</dd>
+
+            <dt class="col-sm-3">Sipariş Tarihi</dt>
+            <dd class="col-sm-9">@Model.OrderDate.ToShortDateString()</dd>
+
+            <dt class="col-sm-3">Durum</dt>
+            <dd class="col-sm-9">
+                @switch (Model.Status)
+                {
+                    case SmartShop.Models.OrderStatus.Received:
+                        <span class="badge bg-secondary">Sipariş Alındı</span>
+                        break;
+                    case SmartShop.Models.OrderStatus.Preparing:
+                        <span class="badge bg-warning text-dark">Hazırlanıyor</span>
+                        break;
+                    case SmartShop.Models.OrderStatus.Shipped:
+                        <span class="badge bg-info text-dark">Kargoda</span>
+                        break;
+                    case SmartShop.Models.OrderStatus.Delivered:
+                        <span class="badge bg-success">Teslim Edildi</span>
+                        break;
+                }
+            </dd>
+
+            <dt class="col-sm-3">Toplam Tutar</dt>
+            <dd class="col-sm-9">@Model.TotalAmount.ToString("C")</dd>
+        </dl>
+        <h5 class="mt-4">Ürünler</h5>
+
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Ürün</th>
+                    <th>Adet</th>
+                    <th>Birim Fiyat</th>
+                    <th>Toplam</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    var price = item.Product.IsDiscounted && item.Product.DiscountPrice.HasValue
+                    ? item.Product.DiscountPrice.Value
+                    : item.Product.Price;
+
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@price.ToString("C")</td>
+                        <td>@((item.Quantity * price).ToString("C"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <form asp-action="Delete" method="post" class="mt-4">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger me-2">Evet, Sil</button>
+            <a asp-action="Index" class="btn btn-secondary">Vazgeç</a>
+        </form>
+    </div>
+</div>

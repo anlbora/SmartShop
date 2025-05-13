@@ -1,0 +1,67 @@
+﻿@model SmartShop.Models.Order
+
+@{
+    ViewData["Title"] = "Yeni Sipariş Oluştur";
+    var products = ViewBag.Products as List<SmartShop.Models.Product>;
+}
+
+<h2>Yeni Sipariş Oluştur</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="CustomerId" class="form-label">Müşteri</label>
+        <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.Customers">
+            <option value="">-- Müşteri Seçin --</option>
+        </select>
+        <span asp-validation-for="CustomerId" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label">Sipariş Durumu</label>
+        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<SmartShop.Models.OrderStatus>()">
+            <option disabled selected>-- Seçin --</option>
+        </select>
+    </div>
+
+    <h5 class="mt-4">Ürünler</h5>
+
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Seç</th>
+                <th>Ürün</th>
+                <th>Fiyat</th>
+                <th>Adet</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < products.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox" name="ProductItems[@i].IsSelected" value="true" />
+                        <input type="hidden" name="ProductItems[@i].ProductId" value="@products[i].Id" />
+                    </td>
+                    <td>@products[i].Name</td>
+                    <td>
+                        @(products[i].IsDiscounted && products[i].DiscountPrice.HasValue
+                            ? products[i].DiscountPrice.Value.ToString("C")
+                            : products[i].Price.ToString("C"))
+                    </td>
+                    <td>
+                        <input type="number" name="ProductItems[@i].Quantity" value="1" min="1" class="form-control" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success">Siparişi Oluştur</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+    </table>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

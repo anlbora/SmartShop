@@ -1,0 +1,28 @@
+﻿@model SmartShop.Models.Category
+
+@{
+    ViewData["Title"] = "Kategori Detayları";
+}
+
+<h2 class="mb-4">Kategori Detayları</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Kategori Adı</dt>
+            <dd class="col-sm-9">@Model.Name</dd>
+
+            @* Eğer ürünleri dahil ettiysen Products.Count gösterebilirsin *@
+            @if (Model.Products != null)
+            {
+                <dt class="col-sm-3">Ürün Sayısı</dt>
+                <dd class="col-sm-9">@Model.Products.Count</dd>
+            }
+        </dl>
+
+        <div class="mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning me-2">Düzenle</a>
+            <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+        </div>
+    </div>
+</div>

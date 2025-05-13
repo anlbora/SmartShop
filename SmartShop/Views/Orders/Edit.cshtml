@@ -1,0 +1,53 @@
+﻿@model SmartShop.Models.Order
+@{
+    ViewData["Title"] = $"Siparişi Düzenle - #{Model.Id}";
+    var products = ViewBag.Products as List<SmartShop.Models.Product>;
+    var customers = ViewBag.Customers as SelectList;
+}
+
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="CustomerId" class="form-label">Müşteri</label>
+        <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.Customers">
+            <option value="">-- Seçiniz --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label">Sipariş Durumu</label>
+        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<SmartShop.Models.OrderStatus>()"></select>
+    </div>
+
+    <p><strong>Sipariş Tarihi:</strong> @Model.OrderDate.ToShortDateString()</p>
+
+    <h5 class="mt-4">Ürünler</h5>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Ürün</th>
+                <th>Adet</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" name="ProductIds" value="@item.ProductId" />
+                        @item.Product.Name
+                    </td>
+                    <td>
+                        <input type="number" name="Quantities" class="form-control" value="@item.Quantity" min="1" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">İptal</a>
+</form>

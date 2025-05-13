@@ -1,0 +1,63 @@
+﻿@model List<SmartShop.Models.Order>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Sipariş Raporu</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Sipariş ID</th>
+                <th>Müşteri</th>
+                <th>E-posta</th>
+                <th>Tarih</th>
+                <th>Durum</th>
+                <th>Tutar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.Customer?.Name</td>
+                    <td>@order.Customer?.Email</td>
+                    <td>@order.OrderDate.ToShortDateString()</td>
+                    <td>@order.Status</td>
+                    <td>
+                        @order.Items.Sum(i => i.Quantity *
+                                 (i.Product.IsDiscounted && i.Product.DiscountPrice.HasValue
+                                 ? i.Product.DiscountPrice.Value
+                                 : i.Product.Price)
+                                 ).ToString("C")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>
